@@ -2,14 +2,13 @@
 #include "math.h"
 #include "string.h"
 
-char num[100] = { 0 };//存放data，用于输出
-u8 uartSend[100] = { 0 };
+static char num[100] = { 0 };//存放data，用于输出
+static u8 uartSend[100] = { 0 };
+static char send[10][100];
 
 void My_printf(UART_HandleTypeDef* huart, const char* ch, float* data)
 {
 	int pos = 0, pos_char = 0;
-
-	char send[10][100];
 
 	while (*ch != '\0')
 	{
@@ -33,6 +32,7 @@ void My_printf(UART_HandleTypeDef* huart, const char* ch, float* data)
 				send[pos_char][0] = (char)(*(data++));
 				send[pos_char++][1] = '\0';
 				ch++;
+				break;
             case 'e'://发送串口屏的结束帧
 				for (int i = 0; i < 3; i++)
 				{
@@ -66,7 +66,7 @@ void My_printf(UART_HandleTypeDef* huart, const char* ch, float* data)
 	int len = (int)strlen(send[0]);
 	strcpy((char*)uartSend, send[0]);
 
-	HAL_UART_Transmit(huart, uartSend, len, 500);
+	HAL_UART_Transmit(huart, uartSend, len, 0xffffffff);
 }
 
 void Float_to_Char(float data, int keep, char* dst)
