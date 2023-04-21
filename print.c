@@ -127,6 +127,12 @@ void Int_to_Char(int data, char* dst)
 		data = -data;
 		tool = 1;
 	}
+	if (data == 0)
+	{
+		dst[0] = '0';
+		dst[1] = '\0';
+		return;
+	}
 	while (data != 0)
 	{
 		num[pos++] = (char)(data % 10 + 48);
